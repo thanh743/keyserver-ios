@@ -1,0 +1,8 @@
+client => user register => 
+
+email id   || 
+password username || 
+
+token => username id email => token  => decrypt  !! cannot modify 
+
+
