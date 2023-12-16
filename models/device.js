@@ -9,7 +9,8 @@ const deviceSchema = new mongoose.Schema({
       unique: true,
       required: true,
       minlength: 5,
-      maxlength: 70
+      maxlength: 70,
+      default: "empty"
     },
     name: {
         type: 'String',
@@ -18,7 +19,7 @@ const deviceSchema = new mongoose.Schema({
         maxlength: 70
     },
     createdDate: {
-        type: 'Date',
+        type: Number,
         default: Date.now()
     },
     info: {
@@ -36,8 +37,18 @@ const deviceSchema = new mongoose.Schema({
         }
     },
     expiredDate: {
-        type: 'Date',
+        type: Number,
         default: Date.now()
+    },
+    activatedDate: {
+        type: Number,
+        required: true,
+        default: Date.now(),
+    },
+    isExpired:{
+        type: Boolean,
+        required: true,
+        default: true ,
     },
     user: {
         type: mongoose.Schema.Types.ObjectId,

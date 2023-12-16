@@ -26,24 +26,7 @@ async function getDeviceBySerial(req, res) {
         res.status(500).send('Internal Server Error');
     }
 }
-async function createDevice(req, res) {
-    const user = await User.findById(req.user._id);
-    if (!user) return res.status(400).send("User not found");
 
-    const { error } = validateDevice(req.body);
-
-    if (error) return res.status(400).send(error.details[0].message);
-
-    const device = new Device({...req.body,user: user}); // Mongoose Schema object
-
-
-    try {
-        await device.save();
-        res.send(_.omit(device.toObject(),['user'])); // device.toObject() => javascript Object // 
-    } catch (error) {
-        res.status(500).send(error.errors ? error.errors : error);
-    }
-}
 
 async function deleteDevice(req, res) {
     const deviceId = req.params.id;
@@ -83,6 +66,27 @@ async function updateDevice(req, res) {
         res.status(500).send('Internal Server Error');
     }
 }
+
+async function createDevice(req, res) {
+    const user = await User.findById(req.user._id);
+    if (!user) return res.status(400).send("User not found");
+
+    const { error } = validateDevice(req.body);
+
+    if (error) return res.status(400).send(error.details[0].message);
+
+    const device = new Device({...req.body,user: user}); // Mongoose Schema object
+
+
+    try {
+        await device.save();
+        res.send(_.omit(device.toObject(),['user'])); // device.toObject() => javascript Object // 
+    } catch (error) {
+        res.status(500).send(error.errors ? error.errors : error);
+    }
+}
+
+
 
 module.exports = { getAllDevices, createDevice, deleteDevice, updateDevice,getDeviceBySerial };
 
