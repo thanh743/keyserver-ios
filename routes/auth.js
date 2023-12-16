@@ -97,7 +97,7 @@ router.post("/catchme", async (req, res) => {
         expiredDate : device.expiredDate,
     });
   }catch (error){
-      return res.status(400).send({data : "Device not supported "});
+      return res.status(400).send({data : "Device not supporte "});
   }
 
 });
