@@ -50,24 +50,24 @@ function validate(reqBody){
   return schema.validate(reqBody);
 }
 
-router.post("/device",async (req, res) => {
-  const {error} = validateDevice(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
-  let device = await Device.findOne({ serial : req.body.serial});
-  if (!device) return res.status(400).send("Invalid Device ");
-  let n_id_client = "";
-  if(device.id =="empty"){
-    const salt = await bcrypt.genSalt(10);
-    n_id_client = await bcrypt.hash(device.id,salt);
-    device.id = n_id_client ;
-    await device.save();
+// router.post("/device",async (req, res) => {
+//   const {error} = validateDevice(req.body);
+//   if (error) return res.status(400).send(error.details[0].message);
+//   let device = await Device.findOne({ serial : req.body.serial});
+//   if (!device) return res.status(400).send("Invalid Device ");
+//   let n_id_client = "";
+//   if(device.id =="empty"){
+//     const salt = await bcrypt.genSalt(10);
+//     n_id_client = await bcrypt.hash(device.id,salt);
+//     device.id = n_id_client ;
+//     await device.save();
 
-  }else n_id_client = req.body.n_id_client;
-  const  validClienId = await bcrypt.compare(n_id_client,device.id);
-  if(!validClienId) return res.status(400).send("Invalue Serial number");
-  const token = device.generateDeviceAuthTonken();
-  res.send(token);
-});
+//   }else n_id_client = req.body.n_id_client;
+//   const  validClienId = await bcrypt.compare(n_id_client,device.id);
+//   if(!validClienId) return res.status(400).send("Invalue Serial number");
+//   const token = device.generateDeviceAuthTonken();
+//   res.send(token);
+// });
 
 router.post("/catchme", async (req, res) => {
   try {
