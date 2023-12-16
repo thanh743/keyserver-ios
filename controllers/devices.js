@@ -4,17 +4,18 @@ const _ = require("lodash");
 // Example: Get all devices
 async function getAllDevices(req, res) {
     try {
-        const devices = await Device.find();
+        const user = await User.findOne({email: req.user.email});
+        const devices = await Device.find({user: user});
         res.send(devices);
     } catch (error) {
         res.status(500).send('Internal Server Error');
     }
 }
-async function getDeviceById(req, res) {
-    const deviceId = req.params.id;
-
+async function getDeviceBySerial(req, res) {
+    const serial = req.params.serial;
     try {
-        const device = await Device.findById(deviceId);
+        const user = await User.findOne({email: req.user.email});
+        const device = await Device.findOne({"info.serial": serial,"user": user});
 
         if (!device) {
             return res.status(404).send('Device not found');
@@ -83,7 +84,7 @@ async function updateDevice(req, res) {
     }
 }
 
-module.exports = { getAllDevices, createDevice, deleteDevice, updateDevice,getDeviceById };
+module.exports = { getAllDevices, createDevice, deleteDevice, updateDevice,getDeviceBySerial };
 
 
 // Dependencies Injection
