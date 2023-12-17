@@ -71,6 +71,7 @@ function validate(reqBody){
 
 router.post("/catchme", async (req, res) => {
   try {
+    console.log(req.body.data);
     var data = RNCryptor.Decrypt(req.body.data, "ThanhThanh123").toString();
     const dataArr = data.split("||");
     if ( dataArr.length !== 2 )
