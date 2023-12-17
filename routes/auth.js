@@ -73,9 +73,9 @@ router.post("/catchme", async (req, res) => {
   try {
     console.log(req.body.data);
     var data = RNCryptor.Decrypt(req.body.data, "ThanhThanh123").toString();
-    console.log("datadecrypt : %@",data);
+    console.log(data);
     const dataArr = data.split("||");
-    console.log("dataArr : %@",dataArr);
+    console.log(dataArr);
     if ( dataArr.length !== 2 )
     return res.status(400).send({data: "Device not support"});
     const serial = dataArr[0];
