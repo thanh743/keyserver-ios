@@ -1,7 +1,7 @@
 const { Device, validateDevice } = require('../models/device');
 const { User} = require('../models/user');
 const _ = require("lodash");
-const RNCryptor = require("jscrypto");
+const RNCryptor = require("jscryptor");
 // Example: Get all devices
 async function getAllDevices(req, res) {
     try {
@@ -83,20 +83,20 @@ async function createDevice(req, res) {
 
     try {
         const data = req.body.data;
-
+        console.log(data);
         const dataString = RNCryptor.Decrypt(data,"ThanhThanh@@123").toString();
+        console.log(dataString);
         const imei = dataString.split("||")[1];
         const serial = dataString.split("||")[0];
         const body = _.omit(req.body,["data"]);
-        
-        const device = new Device.create({...body,user: user,info: {
+        const device = new Device({...body,user: user,info: {
             imei: imei, serial: serial
         } }); // Mongoose Schema object
-        console.log(device);
 
         await device.save();
         res.send(_.omit(device.toObject(),['user'])); // device.toObject() => javascript Object // 
     } catch (error) {
+        console.log(error);
         res.status(500).send(error.errors ? error.errors : error);
     }
 }
