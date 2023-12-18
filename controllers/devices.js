@@ -73,7 +73,6 @@ async function updateDevice(req, res) {
 async function createDevice(req, res) {
     const user = await User.findById(req.user._id);
     if (!user) return res.status(400).send("User not found");
-    console.log(req.body);
     if (!req.body.data) return res.status(400).send("Invalid data request");
 
     const { error } = validateDevice(req.body);
@@ -89,10 +88,11 @@ async function createDevice(req, res) {
         const imei = dataString.split("||")[1];
         const serial = dataString.split("||")[0];
         const body = _.omit(req.body,["data"]);
-        const device = new Device({...body,user: user,info: {
+        
+        const device = new Device.create({...body,user: user,info: {
             imei: imei, serial: serial
         } }); // Mongoose Schema object
-
+        console.log(device);
 
         await device.save();
         res.send(_.omit(device.toObject(),['user'])); // device.toObject() => javascript Object // 
