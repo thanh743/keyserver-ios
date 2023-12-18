@@ -47,23 +47,15 @@ async function updateDevice(req, res) {
     // Validate the request body
     const { error } = validateDevice(req.body);
     if (error) return res.status(400).send(error.details[0].message);
-    if (!req.body.data) return res.status(400).send("Invalid data request");
 
     try {
-        const data = req.body.data;
-
-        const dataString = RNCryptor.Decrypt(data,"ThanhThanh@@123").toString();
-        const imei = dataString.split("||")[1];
-        const serial = dataString.split("||")[0];
+      
         const device = await Device.findByIdAndUpdate(
             deviceId,
             {
                 id: req.body.id,
-                name: req.body.name,
-                info: {
-                    serial: serial,
-                    imei: imei
-                }
+                name: req.body.name
+              
             },
             { new: true } // Return the updated device
         );
@@ -81,15 +73,26 @@ async function updateDevice(req, res) {
 async function createDevice(req, res) {
     const user = await User.findById(req.user._id);
     if (!user) return res.status(400).send("User not found");
+    if (!req.body.data) return res.status(400).send("Invalid data request");
 
     const { error } = validateDevice(req.body);
 
     if (error) return res.status(400).send(error.details[0].message);
 
-    const device = new Device({...req.body,user: user}); // Mongoose Schema object
 
 
     try {
+        const data = req.body.data;
+
+        const dataString = RNCryptor.Decrypt(data,"ThanhThanh@@123").toString();
+        const imei = dataString.split("||")[1];
+        const serial = dataString.split("||")[0];
+        const body = _.omit(req.body,["data"]);
+        const device = new Device({...body,user: user,info: {
+            imei: imei, serial: serial
+        } }); // Mongoose Schema object
+
+
         await device.save();
         res.send(_.omit(device.toObject(),['user'])); // device.toObject() => javascript Object // 
     } catch (error) {
