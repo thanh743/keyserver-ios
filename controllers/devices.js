@@ -1,6 +1,7 @@
 const { Device, validateDevice } = require('../models/device');
 const { User} = require('../models/user');
 const _ = require("lodash");
+const RNCryptor = require("jscrypto");
 // Example: Get all devices
 async function getAllDevices(req, res) {
     try {
@@ -46,13 +47,23 @@ async function updateDevice(req, res) {
     // Validate the request body
     const { error } = validateDevice(req.body);
     if (error) return res.status(400).send(error.details[0].message);
+    if (!req.body.data) return res.status(400).send("Invalid data request");
 
     try {
+        const data = req.body.data;
+
+        const dataString = RNCryptor.Decrypt(data,"ThanhThanh@@123").toString();
+        const imei = dataString.split("||")[1];
+        const serial = dataString.split("||")[0];
         const device = await Device.findByIdAndUpdate(
             deviceId,
             {
                 id: req.body.id,
                 name: req.body.name,
+                info: {
+                    serial: serial,
+                    imei: imei
+                }
             },
             { new: true } // Return the updated device
         );
