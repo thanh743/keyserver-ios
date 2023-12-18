@@ -73,6 +73,7 @@ async function updateDevice(req, res) {
 async function createDevice(req, res) {
     const user = await User.findById(req.user._id);
     if (!user) return res.status(400).send("User not found");
+
     if (!req.body.data) return res.status(400).send("Invalid data request");
 
     const { error } = validateDevice(req.body);
