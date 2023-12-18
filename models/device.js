@@ -25,13 +25,11 @@ const deviceSchema = new mongoose.Schema({
     info: {
         serial : {
             type: 'String',
-            required: true,
             minlength: 5, 
             maxlength: 70
         },
         imei: {
             type: 'String',
-            required: true,
             minlength: 5, 
             maxlength: 70
         }
