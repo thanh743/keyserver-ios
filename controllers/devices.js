@@ -24,7 +24,7 @@ async function getDeviceBySerial(req, res) {
     if (serial1 != serial) return res.status(400).send("Bad Request");
     try {
         const user = await User.findOne({email: req.user.email});
-        const device = await Device.findOne({"info.serial": serial, "info.imei": imei, user: user});
+        const device = await Device.findOne({"info.serial": serial, "info.imei": imei, user: user,expiredDate: {$gte: new Date().toISOString()}});        
         const validationData = `serial|imei|${device ? "true" : "false"}`;
         const encryptData = RNCryptor.Encrypt(validationData,"ThanhThanh@@123");
         res.status(200).send({serial: serial, data: encryptData});   
