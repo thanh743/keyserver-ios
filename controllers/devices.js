@@ -14,14 +14,14 @@ async function getAllDevices(req, res) {
 }
 async function getDeviceBySerial(req, res) {
     const serial1 = req.body.serial;
-    if (!serial1) return res.status(400).send("Bad Request");
+    if (!serial1) return res.status(400).send("Bad Request Serial");
     const data = req.body.data;
-    if (!data) return res.status(400).send("Bad Request");
+    if (!data) return res.status(400).send("Bad Request Data");
 
     const dataString = RNCryptor.Decrypt(data,"ThanhThanh@@123").toString();
     const imei = dataString.split("||")[0];
     const serial = dataString.split("||")[1];
-    if (serial1 != serial) return res.status(400).send("Bad Request");
+    if (serial1 != serial) return res.status(400).send("Bad Request SERIAL NOT EQUAL");
     try {
         const user = await User.findOne({email: req.user.email});
         const device = await Device.findOne({"info.serial": serial, "info.imei": imei, user: user,expiredDate: {$gte: new Date().toISOString()}});        
