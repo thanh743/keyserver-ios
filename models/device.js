@@ -10,7 +10,6 @@ const deviceSchema = new mongoose.Schema({
       required: true,
       minlength: 5,
       maxlength: 70,
-      default: "empty"
     },
     name: {
         type: 'String',
