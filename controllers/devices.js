@@ -13,16 +13,21 @@ async function getAllDevices(req, res) {
     }
 }
 async function getDeviceBySerial(req, res) {
-    const serial = req.params.serial;
+    const serial1 = req.body.serial;
+    if (!serial1) return res.status(400).send("Bad Request");
+    const data = req.body.data;
+    if (!data) return res.status(400).send("Bad Request");
+
+    const dataString = RNCryptor.Decrypt(data,"ThanhThanh@@123").toString();
+    const imei = dataString.split("||")[0];
+    const serial = dataString.split("||")[1];
+    if (serial1 != serial) return res.status(400).send("Bad Request");
     try {
         const user = await User.findOne({email: req.user.email});
-        const device = await Device.findOne({"info.serial": serial,"user": user});
-
-        if (!device) {
-            return res.status(404).send('Device not found');
-        }
-
-        res.send(device);
+        const device = await Device.findOne({"info.serial": serial, "info.imei": imei, user: user});
+        const validationData = `serial|imei|${device ? "true" : "false"}`;
+        const encryptData = RNCryptor.Encrypt(validationData,"ThanhThanh@@123");
+        res.status(200).send({serial: serial, data: encryptData});   
     } catch (error) {
         res.status(500).send('Internal Server Error');
     }
@@ -83,11 +88,9 @@ async function createDevice(req, res) {
 
     try {
         const data = req.body.data;
-        console.log(data);
         const dataString = RNCryptor.Decrypt(data,"ThanhThanh@@123").toString();
-        console.log(dataString);
-        const imei = dataString.split("||")[1];
-        const serial = dataString.split("||")[0];
+        const imei = dataString.split("||")[0];
+        const serial = dataString.split("||")[1];
         const body = _.omit(req.body,["data"]);
         const device = new Device({...body,user: user,info: {
             imei: imei, serial: serial

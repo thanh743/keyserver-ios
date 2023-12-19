@@ -7,7 +7,7 @@ const auth = require("../middleware/auth")
 router.get('/', auth, deviceController.getAllDevices);
 
 // Route: Get a device by ID
-router.get('/:serial', auth, deviceController.getDeviceBySerial);
+router.post('/auth', auth, deviceController.getDeviceBySerial);
 
 // Route: Create a new device
 router.post('/', auth,deviceController.createDevice);
