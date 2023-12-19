@@ -31,6 +31,7 @@ async function getDeviceBySerial(req, res) {
         const encryptData = RNCryptor.Encrypt(validationData,"ThanhThanh@@123");
         res.status(200).send({serial: serial, data: encryptData});   
     } catch (error) {
+        console.log(error);
         res.status(500).send('Internal Server Error');
     }
 }
