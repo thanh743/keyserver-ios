@@ -14,7 +14,6 @@ async function getAllDevices(req, res) {
 }
 async function getDeviceBySerial(req, res) {
     const serial1 = req.body.serial;
-    console.log(req.body);
     if (!serial1) return res.status(400).send("Bad Request Serial");
     const data = req.body.data;
     if (!data) return res.status(400).send("Bad Request Data");
@@ -49,6 +48,35 @@ async function deleteDevice(req, res) {
         res.status(500).send('Internal Server Error');
     }
 }
+// async function updateDevice(req, res) {
+//     const deviceId = req.params.id;
+
+//     // Validate the request body
+//     const { error } = validateDevice(req.body);
+//     if (error) return res.status(400).send(error.details[0].message);
+
+//     try {
+      
+//         const device = await Device.findByIdAndUpdate(
+//             deviceId,
+//             {
+//                 id: req.body.id,
+//                 name: req.body.name
+              
+//             },
+//             { new: true } // Return the updated device
+//         );
+
+//         if (!device) {
+//             return res.status(404).send('Device not found');
+//         }
+
+//         res.send(device);
+//     } catch (error) {
+//         res.status(500).send('Internal Server Error');
+//     }
+// }
+
 async function updateDevice(req, res) {
     const deviceId = req.params.id;
 
@@ -57,13 +85,10 @@ async function updateDevice(req, res) {
     if (error) return res.status(400).send(error.details[0].message);
 
     try {
-      
         const device = await Device.findByIdAndUpdate(
             deviceId,
             {
-                id: req.body.id,
-                name: req.body.name
-              
+                expiredDate: req.body.expiredDate // Thay đổi thành cập nhật expiredDate
             },
             { new: true } // Return the updated device
         );
