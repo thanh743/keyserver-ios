@@ -88,6 +88,8 @@ async function updateDevice(req, res) {
         const device = await Device.findByIdAndUpdate(
             deviceId,
             {
+                id: req.body.id,
+//              name: req.body.name
                 expiredDate: req.body.expiredDate // Thay đổi thành cập nhật expiredDate
             },
             { new: true } // Return the updated device

@@ -584,7 +584,7 @@
                     const name = $("#nameInputedit").val();
                     console.log(id);
                     console.log(name);
-                    const jsonData = {_id:id,name:name};
+                    const jsonData = {_id:id,expiredDate:name};
                     $.ajax({
                         type:"PUT",
                         url: "/api/devices/"+id,
